@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>NITROX PLAYER</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Inter',system-ui;color:#fff;background:#070707;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 400px at 15% 0%,rgba(30,215,96,.18),transparent 60%),radial-gradient(600px 400px at 90% 20%,rgba(0,255,170,.10),transparent 60%);pointer-events:none;z-index:0}
+.wrap{max-width:520px;margin:0 auto;padding:14px 18px 130px;position:relative;z-index:1}
+.logo-box{width:100%;max-width:380px;height:135px;margin:6px auto 4px;border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;background:#000}
+.logo-box img{width:100%;height:100%;object-fit:cover;object-position:50% 70%;display:block}
+.creator{text-align:center;font-size:12px;color:#a7a7a7;margin:8px 0 14px}
+.creator b{color:#fff}
+.pills{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.pills button{white-space:nowrap;border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;background:rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08)}
+.pills button.active{background:#fff;color:#000}
+.pills button.green{background:#1ed760;color:#000;box-shadow:0 6px 20px rgba(30,215,96,.4)}
+.search{display:flex;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:999px;padding:5px 5px 5px 16px;margin:6px 0 18px;backdrop-filter:blur(12px)}
+.search input{flex:1;min-width:0;background:transparent;border:0;color:#fff;outline:none;font-size:14px}
+.search input::placeholder{color:#888}
+.search button{border:0;border-radius:999px;background:#1ed760;color:#000;font-weight:800;padding:11px 18px;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+.tile{border-radius:22px;padding:18px;min-height:128px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.tile b{font-size:17px;line-height:1.1}.tile small{color:#d6d6d6;font-size:12px;opacity:.9}
+.tile span{font-size:30px}
+.t1{background:linear-gradient(135deg,#1ed760,#00c853);color:#000;box-shadow:0 12px 30px rgba(30,215,96,.25)}
+.t1 small{color:#003d1a}
+.t2{background:linear-gradient(135deg,#232323,#1a1a1a)}
+.t3{background:linear-gradient(135deg,#2e2e2e,#1f1f1f)}
+.t4{background:linear-gradient(135deg,#1ed76022,#ffffff10);border:1px solid rgba(30,215,96,.25)}
+.sec{display:flex;justify-content:space-between;align-items:end;margin:8px 0 14px}
+.sec b{font-size:20px;letter-spacing:-.5px}.sec small{color:#888;font-size:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chips button{padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.07);color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+.chips button.on{background:#1ed760;color:#000;border-color:#1ed760}
+.card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);padding:10px;border-radius:18px;margin-bottom:10px;backdrop-filter:blur(8px)}
+.card img{width:56px;height:56px;border-radius:14px;object-fit:cover;background:#333}
+.info{flex:1;min-width:0}.info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.info small{color:#a7a7a7;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;margin-top:2px}
+.mini{width:40px;height:40px;border:0;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:15px;color:#fff;background:rgba(255,255,255,.10)}
+.mini.go{background:#1ed760;color:#000;box-shadow:0 4px 14px rgba(30,215,96,.4)}.mini.down{background:#2a2a2a}
+.empty{text-align:center;color:#888;padding:28px;line-height:1.6;font-size:14px}
+.view{display:none}.view.active{display:block}
+.bottom-nav{position:fixed;left:14px;right:14px;bottom:14px;background:rgba(18,18,18,.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.10);border-radius:999px;display:flex;padding:6px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.bottom-nav button{flex:1;border:0;background:transparent;color:#888;padding:10px;border-radius:999px;font-size:11px;font-weight:700;cursor:pointer}
+.bottom-nav button.active{background:#fff;color:#000}
+.bottom-nav button span{display:block;font-size:19px}
+#playerView{position:fixed;inset:0;background:#070707;z-index:100;display:none;flex-direction:column}
+#playerView::before{content:'';position:fixed;inset:0;background:radial-gradient(600px 300px at 50% 0%,rgba(30,215,96,.25),transparent 60%);pointer-events:none}
+#playerView.show{display:flex}
+.p-top{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;position:relative;z-index:1}
+.p-top button{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10);color:#fff;padding:10px 14px;border-radius:999px;font-size:16px;cursor:pointer;backdrop-filter:blur(10px)}
+.p-top b{font-size:12px;color:#a7a7a7;font-weight:600;letter-spacing:1px}
+.swipe{flex:1;overflow:hidden;position:relative;z-index:1}
+.swipe-track{display:flex;width:200%;height:100%;transition:transform .35s}
+.swipe-page{width:50%;height:100%;overflow-y:auto;padding:0 22px;display:flex;flex-direction:column;align-items:center}
+.cover{width:min(78vw,320px);aspect-ratio:1;border-radius:28px;object-fit:cover;margin-top:10px;background:#1ed760;box-shadow:0 24px 60px rgba(30,215,96,.25)}
+.p-title{font-size:24px;font-weight:900;text-align:center;margin:20px 0 4px;letter-spacing:-.5px}
+.p-artist{color:#a7a7a7;margin:0 0 10px}.hint{color:#666;font-size:12px;margin:6px 0}
+.lyrics{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px;line-height:1.9;white-space:pre-wrap;min-height:320px;font-size:15px}
+.lyrics-btns{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;width:100%}
+.lyrics-btns button{flex:1;padding:12px;border:0;border-radius:999px;color:#fff;font-weight:800;cursor:pointer;font-size:13px}
+#videoEl{width:min(92vw,500px);border-radius:22px;background:#000;display:none;margin-top:10px;max-height:300px}
+#videoEl.show{display:block}
+.video-controls{display:none;gap:8px;justify-content:center;padding:0 16px 10px;flex-wrap:wrap}
+.video-controls button{padding:10px 16px;border:0;border-radius:999px;background:rgba(255,255,255,.10);color:#fff;font-weight:700;cursor:pointer}
+.video-controls button.on{background:#1ed760;color:#000}
+.progress-wrap{padding:0 22px;position:relative;z-index:1}#progress{width:100%;accent-color:#1ed760}
+.times{display:flex;justify-content:space-between;color:#888;font-size:12px;padding:4px 22px;position:relative;z-index:1}
+.controls{display:flex;justify-content:center;align-items:center;gap:18px;padding:12px 10px 8px;position:relative;z-index:1}
+.controls button{border:0;cursor:pointer;color:#fff;background:transparent;font-family:inherit}
+.c-small{font-size:16px;color:#fff;font-weight:800;letter-spacing:1px}
+.c-mid{font-size:28px;color:#fff}
+.c-play{width:68px;height:68px;border-radius:50%;background:#1ed760;color:#000;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(30,215,96,.5)}
+.c-stop{font-size:18px;color:#fff}
+#menu{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);z-index:200;display:none}
+#menu.show{display:flex;justify-content:flex-end}
+.menu-box{background:#141414;width:88%;max-width:380px;height:100%;padding:24px;overflow-y:auto;border-left:1px solid rgba(255,255,255,.08);border-radius:24px 0 0 24px}
+.menu-box button{width:100%;padding:14px;border:0;border-radius:999px;background:#1ed760;color:#000;font-weight:800;margin-top:12px;cursor:pointer}
+.menu-box .back{background:rgba(255,255,255,.10);color:#fff}
+.eq-row{margin:18px 0}.eq-row label{display:flex;justify-content:space-between;font-size:14px}.eq-row input{width:100%;accent-color:#1ed760}
+.preset{display:flex;gap:6px;flex-wrap:wrap}.preset button{width:auto;flex:1;padding:10px;background:rgba(255,255,255,.10);color:#fff}
+/* VANSO / IA */
+.vanso-box{background:linear-gradient(135deg,#1ed76022,#ffffff10);border:1px solid rgba(30,215,96,.3);border-radius:22px;padding:18px;margin-bottom:14px}
+.vanso-box b{font-size:17px}
+.vanso-box p{color:#b3b3b3;font-size:13px;line-height:1.5;margin:8px 0 14px}
+.vanso-box input{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);color:#fff;padding:12px 14px;border-radius:14px;margin-bottom:8px;outline:none;font-size:14px}
+.vanso-box input::placeholder{color:#888}
+.btn-vanso{width:100%;padding:14px;border:0;border-radius:999px;background:#1ed760;color:#000;font-weight:900;cursor:pointer;font-size:14px;margin-bottom:8px}
+.btn-vanso2{width:100%;padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;font-weight:800;cursor:pointer}
+.prompt-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#fff;padding:10px 12px;border-radius:14px;font-size:13px;text-align:left;cursor:pointer;width:100%;margin-bottom:8px;line-height:1.4}
+</style>
+</head>
+<body>
+
+<div id="bibView" class="view active">
+  <div class="wrap">
+    <div class="logo-box"><img src="logoaudio.jpeg" alt="NITROX PLAYER"></div>
+    <div class="creator">Creado por <b>Ismael S</b></div>
+
+    <div class="pills">
+      <button class="active" onclick="showBibTab('audios',this)">Audios</button>
+      <button onclick="showBibTab('videos',this)">Videos</button>
+      <button class="green" onclick="showBibTab('discover',this)">✦ Discover IA</button>
+      <button onclick="showBibTab('audios',this)">Biblioteca</button>
+    </div>
+
+    <div class="search"><input id="searchGlobal" placeholder="Buscar amor, cristiana, alabanza..." onkeydown="if(event.key==='Enter') buscarGlobal()"><button onclick="buscarGlobal()">Buscar</button></div>
+
+    <div class="grid">
+      <div class="tile t1" onclick="cargarAudios('amor');showBibTab('audios')"><span>❤️</span><div><b>Amor</b><br><small>Baladas & Románticas</small></div></div>
+      <div class="tile t2" onclick="cargarVideos('musica cristiana');showBibTab('videos')"><span>🎬</span><div><b>Videos</b><br><small>Ver en HD</small></div></div>
+      <div class="tile t3" onclick="showBibTab('discover')"><span>✦</span><div><b>Crear con IA</b><br><small>Vanso AI</small></div></div>
+      <div class="tile t4" onclick="showBibTab('discover')"><span>🤖</span><div><b>Discover IA</b><br><small>Tus creaciones</small></div></div>
+    </div>
+
+    <div id="bibAudios">
+      <div class="sec"><b>Popular ahora</b><small>Audios - iTunes</small></div>
+      <div class="chips"><button class="on" onclick="cargarAudios('amor')">❤️ Amor</button><button onclick="cargarAudios('musica cristiana')">🙏 Cristiana</button><button onclick="cargarAudios('alabanza')">🎶 Alabanza</button></div>
+      <div id="listaAudios"><div class="empty">Tocá un botón para cargar audios.<br>No carga nada solo.</div></div>
+    </div>
+    <div id="bibVideos" style="display:none">
+      <div class="sec"><b>Popular ahora</b><small>Videos - iTunes</small></div>
+      <div class="chips"><button class="on" onclick="cargarVideos('amor')">❤️ Amor</button><button onclick="cargarVideos('musica cristiana')">🙏 Cristiana</button><button onclick="cargarVideos('alabanza')">🎶 Alabanza</button></div>
+      <div id="listaVideos"><div class="empty">Tocá un botón para cargar videos.</div></div>
+    </div>
+
+    <!-- DISCOVER MODIFICADO CON VANSO -->
+    <div id="bibDiscover" style="display:none">
+      <div class="sec"><b>【entity-Discover¦canonical_name=Discover】 IA</b><small>Vanso AI</small></div>
+
+      <div class="vanso-box">
+        <b>✦ Crear música con IA en Vanso</b>
+        <p>1. Tocá Abrir Vanso<br>2. Escribí lo que querés o copiá un ejemplo de abajo<br>3. Generá tu tema, descargalo o copiá el link del audio<br>4. Pegalo acá abajo y queda guardado en NITROX</p>
+        <button class="btn-vanso" onclick="window.open('https://s.vanso.ai','_blank')">✦ ABRIR VANSO AI</button>
+        <button class="btn-vanso2" onclick="copiarPrompt(document.getElementById('promptBase').value)">📋 Copiar prompt para Vanso</button>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <b style="font-size:14px">Ejemplos para pegar en Vanso:</b>
+        <div style="margin-top:10px">
+          <button class="prompt-chip" onclick="usarPrompt(this)">❤️ Balada de amor romántica, voz masculina suave, piano y guitarra, lenta, emotiva, en español</button>
+          <button class="prompt-chip" onclick="usarPrompt(this)">🙏 Alabanza cristiana, worship, voz femenina, piano y coros, ambiente de iglesia, en español</button>
+          <button class="prompt-chip" onclick="usarPrompt(this)">💘 Balada cristiana de amor, para dedicar, guitarra acústica, voz dulce, letra de fe y amor</button>
+          <button class="prompt-chip" onclick="usarPrompt(this)">✨ Gospel moderno, alegre, con coros, ritmo suave, mensaje de esperanza, en español</button>
+        </div>
+        <input id="promptBase" placeholder="Tu prompt para Vanso..." style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px;border-radius:14px;outline:none" value="Balada de amor cristiana, voz suave, piano y guitarra, en español">
+      </div>
+
+      <div class="vanso-box">
+        <b>＋ Agregar tu creación de Vanso</b>
+        <p>Pegá el nombre y el link del audio que te dio Vanso. Si descargaste el MP3, subilo a Netlify / tu nube y pegá el link acá.</p>
+        <input id="vTitle" placeholder="Nombre del tema - Ej: Amor Eterno IA">
+        <input id="vArtist" placeholder="Artista - Ej: Ismael S x IA" value="Ismael S x IA">
+        <input id="vUrl" placeholder="Link del audio MP3 de Vanso - https://...mp3">
+        <input id="vImg" placeholder="Link de portada (opcional) - si no, usa el logo">
+        <button class="btn-vanso" onclick="agregarVanso()">＋ GUARDAR EN NITROX</button>
+      </div>
+
+      <div class="sec"><b>Mis creaciones IA</b><small id="countVanso">0 temas</small></div>
+      <div id="listaDiscover"><div class="empty">Todavía no tenés creaciones.<br>Creá una en Vanso y agregala arriba.</div></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="active" onclick="showBibTab('audios')"><span>🏠</span>Inicio</button>
+    <button onclick="showBibTab('discover')"><span>✦</span>Discover IA</button>
+    <button onclick="showBibTab('videos')"><span>🎬</span>Videos</button>
+    <button onclick="abrirMenu()"><span>⚙️</span>Ajustes</button>
+  </div>
+</div>
+
+<div id="playerView">
+  <div class="p-top"><button onclick="volverABiblioteca()">⌄</button><b>REPRODUCIENDO</b><button onclick="abrirMenu()">⋮</button></div>
+  <div class="swipe" id="swipeArea">
+    <div class="swipe-track" id="swipeTrack">
+      <div class="swipe-page">
+        <img id="pCover" class="cover" src="">
+        <video id="videoEl" controls playsinline></video>
+        <div class="p-title" id="pTitle">-</div><p class="p-artist" id="pArtist">-</p>
+        <div class="hint">Deslizá ← para ver la letra</div>
+        <div class="video-controls" id="videoControls"><button onclick="verCompleto()">⛶ Ver Completo</button><button id="btnRotate" onclick="toggleAutoGiro()">🔄 Auto-Giro: OFF</button></div>
+      </div>
+      <div class="swipe-page">
+        <h3 style="align-self:flex-start;margin:10px 0">Letra</h3>
+        <div class="lyrics" id="lyricsBox">Tocá buscar letra.</div>
+        <div class="lyrics-btns"><button style="background:#1ed760;color:#000" onclick="buscarLetra('cuerda')">🎸 LaCuerda.net</button><button style="background:#232323" onclick="buscarLetra('google')">🔍 Google</button><button style="background:#fff;color:#000" onclick="buscarLetra('genius')"> Genius</button></div>
+        <div class="hint">Deslizá → para volver a la portada</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-wrap"><input type="range" id="progress" value="0" min="0" max="100"></div>
+  <div class="times"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
+  <div class="controls">
+    <button class="c-small" onclick="retroceder10()">◀ 10</button>
+    <button class="c-mid" onclick="anterior()">◀◀</button>
+    <button class="c-play" id="btnPlayPause" onclick="togglePlay()">❚❚</button>
+    <button class="c-stop" onclick="stopAudio()">■</button>
+    <button class="c-mid" onclick="siguiente()">▶▶</button>
+    <button class="c-small" onclick="adelantar10()">10 ▶</button>
+  </div>
+  <div style="text-align:center;padding-bottom:16px"><a id="pDown" href="#" download style="color:#1ed760;font-size:13px;text-decoration:none">↓ Descargar este tema</a></div>
+</div>
+
+<div id="menu" onclick="if(event.target===this) cerrarMenu()">
+  <div class="menu-box">
+    <h3 style="margin:0">Configuración</h3>
+    <button class="back" onclick="cerrarMenu()">⬅️ Atrás</button>
+    <h4>🎚️ Ecualizador</h4>
+    <div class="preset"><button onclick="setPreset('plano')">Plano</button><button onclick="setPreset('cristiana')">🙏 Cristiana</button><button onclick="setPreset('amor')">❤️ Amor</button><button onclick="setPreset('bajo')">🔥 Bajo</button></div>
+    <div class="eq-row"><label><span>Graves</span><span id="vBass">0 dB</span></label><input type="range" min="-12" max="12" value="0" id="eqBass" oninput="aplicarEQ()"></div>
+    <div class="eq-row"><label><span>Medios / Voz</span><span id="vMid">0 dB</span></label><input type="range" min="-12" max="12" value="0" id="eqMid" oninput="aplicarEQ()"></div>
+    <div class="eq-row"><label><span>Agudos</span><span id="vTreble">0 dB</span></label><input type="range" min="-12" max="12" value="0" id="eqTreble" oninput="aplicarEQ()"></div>
+    <div class="eq-row"><label><span>Volumen</span><span id="vVol">100%</span></label><input type="range" min="0" max="100" value="100" id="eqVol" oninput="aplicarEQ()"></div>
+    <button onclick="cerrarMenu()">✅ Listo</button>
+  </div>
+</div>
+
+<audio id="audio" preload="none"></audio>
+<script>
+let listaActual=[]; let indiceActual=0; let tipoActual='audio'; let autoGiro=false;
+const audio=document.getElementById('audio'); const videoEl=document.getElementById('videoEl');
+let ctx=null,bassF=null,midF=null,trebF=null,gainN=null;
+function initEQ(){ if(ctx) return; try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); const src=ctx.createMediaElementSource(audio); bassF=ctx.createBiquadFilter(); bassF.type='lowshelf'; bassF.frequency.value=200; midF=ctx.createBiquadFilter(); midF.type='peaking'; midF.frequency.value=1000; trebF=ctx.createBiquadFilter(); trebF.type='highshelf'; trebF.frequency.value=4000; gainN=ctx.createGain(); src.connect(bassF); bassF.connect(midF); midF.connect(trebF); trebF.connect(gainN); gainN.connect(ctx.destination);}catch(e){} }
+function aplicarEQ(){ initEQ(); if(ctx&&ctx.state==='suspended') ctx.resume(); const b=+document.getElementById('eqBass').value,m=+document.getElementById('eqMid').value,t=+document.getElementById('eqTreble').value,v=+document.getElementById('eqVol').value; document.getElementById('vBass').textContent=b+' dB'; document.getElementById('vMid').textContent=m+' dB'; document.getElementById('vTreble').textContent=t+' dB'; document.getElementById('vVol').textContent=v+'%'; if(bassF){bassF.gain.value=b;midF.gain.value=m;trebF.gain.value=t;gainN.gain.value=v/100;} }
+function setPreset(p){ let b=0,m=0,t=0; if(p==='cristiana'){b=2;m=4;t=3} if(p==='amor'){b=3;m=2;t=2} if(p==='bajo'){b=10;m=0;t=2} document.getElementById('eqBass').value=b; document.getElementById('eqMid').value=m; document.getElementById('eqTreble').value=t; aplicarEQ(); }
+function showBibTab(tab,btn){ ['audios','videos','discover'].forEach(t=>{ document.getElementById('bib'+t.charAt(0).toUpperCase()+t.slice(1)).style.display=t===tab?'block':'none'; }); document.querySelectorAll('.pills button').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); if(tab==='discover') cargarVanso(); }
+function buscarGlobal(){ const v=document.getElementById('searchGlobal').value.trim(); if(v) cargarAudios(v); showBibTab('audios'); }
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+async function cargarAudios(q){ if(!q) return; await cargar('listaAudios',q,'song','audio'); }
+async function cargarVideos(q){ if(!q) return; await cargar('listaVideos',q,'musicVideo','video'); }
+async function cargar(listId,q,entity,tipo){
+  const box=document.getElementById(listId); box.innerHTML='<div class="empty">Buscando "'+escapeHtml(q)+'"...</div>';
+  try{
+    const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&media=music&entity='+entity+'&limit=30&lang=es_es');
+    const data=await res.json(); if(!data.results||!data.results.length){ box.innerHTML='<div class="empty">No se encontró nada.</div>'; return; }
+    box.innerHTML='';
+    data.results.forEach((t,i)=>{ if(!t.previewUrl) return; const div=document.createElement('div'); div.className='card'; div.innerHTML=`<img src="${t.artworkUrl100||''}"><div class="info"><b>${escapeHtml(t.trackName||'')}</b><small>${escapeHtml(t.artistName||'')} • ${tipo==='video'?'Video':'Audio'}</small></div><button class="mini go" onclick="irAReproductor('${listId}',${i})">▶</button><button class="mini down" onclick="descargarDirecto('${t.previewUrl}')">⬇️</button>`; div.dataset.title=t.trackName||''; div.dataset.artist=t.artistName||''; div.dataset.img=t.artworkUrl100||''; div.dataset.url=t.previewUrl; div.dataset.tipo=tipo; box.appendChild(div); });
+  }catch(e){ box.innerHTML='<div class="empty">Error de conexión.</div>'; }
+}
+// --- VANSO / DISCOVER IA ---
+function getVanso(){ try{ return JSON.parse(localStorage.getItem('nitrox_vanso')||'[]'); }catch(e){ return []; } }
+function saveVanso(list){ localStorage.setItem('nitrox_vanso', JSON.stringify(list)); }
+function usarPrompt(btn){ document.getElementById('promptBase').value = btn.textContent.trim(); copiarPrompt(btn.textContent.trim()); }
+function copiarPrompt(txt){ if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>alert('Prompt copiado. Pegalo en Vanso.')); else alert(txt); }
+function agregarVanso(){
+  const title=document.getElementById('vTitle').value.trim();
+  const artist=document.getElementById('vArtist').value.trim()||'Ismael S x IA';
+  const url=document.getElementById('vUrl').value.trim();
+  const img=document.getElementById('vImg').value.trim()||'logoaudio.jpeg';
+  if(!title||!url){ alert('Poné nombre y link del audio de Vanso'); return; }
+  const list=getVanso(); list.unshift({title,artist,img,url,tipo:'audio'}); saveVanso(list);
+  document.getElementById('vTitle').value=''; document.getElementById('vUrl').value=''; document.getElementById('vImg').value='';
+  cargarVanso(); alert('Guardado en Discover IA');
+}
+function cargarVanso(){
+  const list=getVanso(); const box=document.getElementById('listaDiscover');
+  document.getElementById('countVanso').textContent=list.length+' temas';
+  if(!list.length){ box.innerHTML='<div class="empty">Todavía no tenés creaciones.<br>Creá una en Vanso y agregala arriba.</div>'; return; }
+  box.innerHTML='';
+  list.forEach((t,i)=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`<img src="${t.img}"><div class="info"><b>${escapeHtml(t.title)}</b><small>${escapeHtml(t.artist)} • IA - Vanso</small></div><button class="mini go" onclick="irAReproductor('listaDiscover',${i})">▶</button><button class="mini down" onclick="borrarVanso(${i})">✕</button>`;
+    div.dataset.title=t.title; div.dataset.artist=t.artist; div.dataset.img=t.img; div.dataset.url=t.url; div.dataset.tipo='audio';
+    box.appendChild(div);
+  });
+}
+function borrarVanso(i){ if(!confirm('¿Borrar este tema IA?')) return; const list=getVanso(); list.splice(i,1); saveVanso(list); cargarVanso(); }
+// --- FIN VANSO ---
+function descargarDirecto(url){ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.click(); }
+function irAReproductor(listId,index){ const cards=[...document.getElementById(listId).querySelectorAll('.card')]; listaActual=cards.map(c=>({title:c.dataset.title,artist:c.dataset.artist,img:c.dataset.img,url:c.dataset.url,tipo:c.dataset.tipo})); indiceActual=index; tipoActual=listaActual[index].tipo; abrirReproductor(); }
+function abrirReproductor(){ const t=listaActual[indiceActual]; document.getElementById('bibView').classList.remove('active'); document.getElementById('playerView').classList.add('show'); document.getElementById('pTitle').textContent=t.title; document.getElementById('pArtist').textContent=t.artist; document.getElementById('pCover').src=t.img; document.getElementById('pDown').href=t.url; document.getElementById('lyricsBox').textContent='Letra de "'+t.title+' - '+t.artist+'"\n\nEsta creación es de Vanso IA. Si la generaste vos, la letra la tenés en Vanso.'; document.getElementById('videoControls').style.display=t.tipo==='video'?'flex':'none'; videoEl.classList.toggle('show',t.tipo==='video'); document.getElementById('pCover').style.display=t.tipo==='video'?'none':'block'; if(t.tipo==='video'){audio.pause(); videoEl.src=t.url; videoEl.play();} else {videoEl.pause(); videoEl.removeAttribute('src'); audio.src=t.url; audio.play(); initEQ(); aplicarEQ();} document.getElementById('btnPlayPause').textContent='❚❚'; irAPortada(); }
+function volverABiblioteca(){ document.getElementById('playerView').classList.remove('show'); document.getElementById('bibView').classList.add('active'); cerrarMenu(); }
+function togglePlay(){ if(tipoActual==='video'){ if(videoEl.paused){videoEl.play(); document.getElementById('btnPlayPause').textContent='❚❚';} else {videoEl.pause(); document.getElementById('btnPlayPause').textContent='▶';} } else { if(audio.paused){audio.play(); document.getElementById('btnPlayPause').textContent='❚❚';} else {audio.pause(); document.getElementById('btnPlayPause').textContent='▶';} } }
+function stopAudio(){ if(tipoActual==='video'){videoEl.pause(); videoEl.currentTime=0;} else {audio.pause(); audio.currentTime=0;} document.getElementById('btnPlayPause').textContent='▶'; }
+function adelantar10(){ if(tipoActual==='video') videoEl.currentTime+=10; else audio.currentTime+=10; }
+function retroceder10(){ if(tipoActual==='video') videoEl.currentTime-=10; else audio.currentTime-=10; }
+function anterior(){ if(indiceActual>0){indiceActual--; abrirReproductor();} }
+function siguiente(){ if(indiceActual<listaActual.length-1){indiceActual++; abrirReproductor();} }
+function verCompleto(){ if(videoEl.requestFullscreen) videoEl.requestFullscreen(); else if(videoEl.webkitRequestFullscreen) videoEl.webkitRequestFullscreen(); }
+function toggleAutoGiro(){ autoGiro=!autoGiro; document.getElementById('btnRotate').textContent='🔄 Auto-Giro: '+(autoGiro?'ON':'OFF'); document.getElementById('btnRotate').classList.toggle('on',autoGiro); if(autoGiro){ try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{}); }catch(e){} } else { try{ if(screen.orientation&&screen.orientation.unlock) screen.orientation.unlock(); }catch(e){} } }
+let startX=0; const swipeArea=document.getElementById('swipeArea');
+swipeArea.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
+swipeArea.addEventListener('touchend',e=>{ const dx=e.changedTouches[0].clientX-startX; if(dx<-60) irALetra(); if(dx>60) irAPortada(); },{passive:true});
+function irALetra(){ document.getElementById('swipeTrack').style.transform='translateX(-50%)'; }
+function irAPortada(){ document.getElementById('swipeTrack').style.transform='translateX(0)'; }
+function buscarLetra(donde){ const t=listaActual[indiceActual]; const q=encodeURIComponent(t.title+' '+t.artist); let url=''; if(donde==='cuerda') url='https://www.lacuerda.net/busca.php?exp='+q; if(donde==='google') url='https://www.google.com/search?q=letra+'+q; if(donde==='genius') url='https://genius.com/search?q='+q; document.getElementById('lyricsBox').textContent='Abriendo '+donde+'...\n\n'+t.title+' - '+t.artist; window.open(url,'_blank'); }
+function abrirMenu(){ document.getElementById('menu').classList.add('show'); }
+function cerrarMenu(){ document.getElementById('menu').classList.remove('show'); }
+const prog=document.getElementById('progress'); function fmt(s){ if(!isFinite(s)) return '0:00'; const m=Math.floor(s/60),ss=Math.floor(s%60); return m+':'+(ss<10?'0':'')+ss; }
+audio.addEventListener('timeupdate',()=>{ if(audio.duration){ prog.value=(audio.currentTime/audio.duration)*100; document.getElementById('curTime').textContent=fmt(audio.currentTime); document.getElementById('durTime').textContent=fmt(audio.duration);} });
+videoEl.addEventListener('timeupdate',()=>{ if(videoEl.duration){ prog.value=(videoEl.currentTime/videoEl.duration)*100; document.getElementById('curTime').textContent=fmt(videoEl.currentTime); document.getElementById('durTime').textContent=fmt(videoEl.duration);} });
+prog.addEventListener('input',()=>{ if(tipoActual==='video'&&videoEl.duration) videoEl.currentTime=prog.value/100*videoEl.duration; if(tipoActual!=='video'&&audio.duration) audio.currentTime=prog.value/100*audio.duration; });
+audio.addEventListener('ended',()=>{ siguiente(); }); videoEl.addEventListener('ended',()=>{ siguiente(); });
+cargarVanso();
+</script>
+</body>
+</html>

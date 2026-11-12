@@ -1,0 +1,30 @@
+{
+  "name": "NITROX PLAYER - Creado por Ismael S",
+  "short_name": "NITROX",
+  "description": "Reproductor de música y videos creado por Ismael S. Sin anuncios, con EQ Pro y Mezclador DJ.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#ff3300",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logoaudio.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "logoaudio.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "logoaudio.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    }
+  ]
+}

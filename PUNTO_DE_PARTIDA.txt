@@ -1,0 +1,45 @@
+PUNTO DE PARTIDA - NITROX PLAYER
+Creado por Ismael S - Mercedes, Buenos Aires, Argentina
+
+PROYECTO:
+Reproductor de música y video NITROX PLAYER.
+Un solo archivo index.html + logoaudio.jpeg en la misma carpeta.
+
+ARCHIVOS EN LA CARPETA:
+- index.html (el código completo)
+- logoaudio.jpeg (logo del reproductor)
+
+FUNCIONES QUE YA TIENE:
+- Pestañas: MÚSICA y VIDEO
+- Agregar MP3 sueltos o Carpeta Completa
+- Agregar Videos sueltos o Carpeta de Videos
+- Guarda la música en el celular (IndexedDB) - queda guardada aunque cierre
+- Buscador de temas
+- Ocultar notas de voz y audios de WhatsApp (aud-, ptt-, opus, ogg)
+- Modos: Todas / Una sola / Aleatorio
+- Favoritos con estrella
+- Letras: buscar en internet o pegar manual, se guarda
+- Cambiar tapa / portada de cada tema
+- Mini-player abajo siempre visible
+- Pantalla completa de reproducción con tapa grande
+
+ECUALIZADOR PRO - STUDIO:
+- 11 bandas: 31, 62, 125, 250, 500, 1K, 2K, 4K, 8K, 12K, 16K
+- Presets: Plano, Bass Boost, Rock, Pop, Vocal, Electrónica, Cumbia / Reggaeton, Agudos
+- Pre-Amp -12 a +12 dB, BYPASS, Reset, gráfico con analizador
+
+MEZCLADOR DJ:
+- Deck A (naranja) + Deck B (azul)
+- Volumen por Deck, Velocidad 0.5x a 1.5x
+- Crossfader A / B, Solo A, Mitad, Solo B
+- AUTO-MIX 15s, SYNC Velocidad, Parar todo
+- Botones A y B en cada tema para cargar al Deck
+
+COMO USAR:
+1. Abrir index.html en el navegador
+2. Agregar música o carpeta
+3. Tocar un tema para escuchar
+4. Usar EQ y MIX desde el reproductor
+
+SI TENGO QUE PEDIR AYUDA:
+Decir: "Soy Ismael S, seguí con mi NITROX PLAYER, ya tiene EQ, mezclador DJ, letras y guardado. Pasame el código completo actualizado"
