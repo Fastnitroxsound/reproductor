@@ -271,7 +271,7 @@ function agregarArchivosLocales(files){
   nuevos.forEach(f=>{
     const url=URL.createObjectURL(f);
     const esVideo=f.type.startsWith('video/')||/\.(mp4|mkv|webm|mov)$/.test(f.name.toLowerCase());
-    archivosLocales.push({title:f.name.replace(/\.[^.]+$/,''), file:f.name, artist:'Archivo local • '+((f.size/1024/1024).toFixed(1))+' MB'), img:'', url:url, tipo: esVideo?'video':'audio'});
+    archivosLocales.push({title:f.name.replace(/\.[^.]+$/,''), file:f.name, artist:'Archivo local • '+((f.size/1024/1024).toFixed(1))+' MB', img:'', url:url, tipo: esVideo?'video':'audio'});
   });
   filtroLocal=''; renderLocal(); showBibTab('local');
 }
