@@ -18,6 +18,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
 .pills button{white-space:nowrap;border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;background:rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08)}
 .pills button.active{background:#fff;color:#000}
 .pills button.green{background:#1ed760;color:#000;box-shadow:0 6px 20px rgba(30,215,96,.4)}
+.pills button.orange{background:#ff9f1a;color:#000;box-shadow:0 6px 20px rgba(255,159,26,.4)}
 .search{display:flex;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);border-radius:999px;padding:5px 5px 5px 16px;margin:6px 0 18px;backdrop-filter:blur(12px)}
 .search input{flex:1;min-width:0;background:transparent;border:0;color:#fff;outline:none;font-size:14px}
 .search input::placeholder{color:#888}
@@ -31,6 +32,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
 .t2{background:linear-gradient(135deg,#232323,#1a1a1a)}
 .t3{background:linear-gradient(135deg,#2e2e2e,#1f1f1f)}
 .t4{background:linear-gradient(135deg,#1ed76022,#ffffff10);border:1px solid rgba(30,215,96,.25)}
+.t5{background:linear-gradient(135deg,#ff9f1a,#ff6b00);color:#000}
+.t5 small{color:#3d1a00}
 .sec{display:flex;justify-content:space-between;align-items:end;margin:8px 0 14px}
 .sec b{font-size:20px;letter-spacing:-.5px}.sec small{color:#888;font-size:12px}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
@@ -83,7 +86,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
 .menu-box .back{background:rgba(255,255,255,.10);color:#fff}
 .eq-row{margin:18px 0}.eq-row label{display:flex;justify-content:space-between;font-size:14px}.eq-row input{width:100%;accent-color:#1ed760}
 .preset{display:flex;gap:6px;flex-wrap:wrap}.preset button{width:auto;flex:1;padding:10px;background:rgba(255,255,255,.10);color:#fff}
-/* VANSO / IA */
 .vanso-box{background:linear-gradient(135deg,#1ed76022,#ffffff10);border:1px solid rgba(30,215,96,.3);border-radius:22px;padding:18px;margin-bottom:14px}
 .vanso-box b{font-size:17px}
 .vanso-box p{color:#b3b3b3;font-size:13px;line-height:1.5;margin:8px 0 14px}
@@ -92,6 +94,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
 .btn-vanso{width:100%;padding:14px;border:0;border-radius:999px;background:#1ed760;color:#000;font-weight:900;cursor:pointer;font-size:14px;margin-bottom:8px}
 .btn-vanso2{width:100%;padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;font-weight:800;cursor:pointer}
 .prompt-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#fff;padding:10px 12px;border-radius:14px;font-size:13px;text-align:left;cursor:pointer;width:100%;margin-bottom:8px;line-height:1.4}
+.local-box{background:linear-gradient(135deg,#ff9f1a22,#ffffff10);border:1px solid rgba(255,159,26,.35);border-radius:22px;padding:18px;margin-bottom:14px}
+.local-box b{font-size:17px}
+.local-box p{color:#b3b3b3;font-size:13px;line-height:1.5;margin:8px 0 14px}
+.btn-local{width:100%;padding:14px;border:0;border-radius:999px;background:#ff9f1a;color:#000;font-weight:900;cursor:pointer;font-size:14px;margin-bottom:8px}
+.btn-local2{width:100%;padding:12px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;font-weight:800;cursor:pointer}
 </style>
 </head>
 <body>
@@ -105,6 +112,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
       <button class="active" onclick="showBibTab('audios',this)">Audios</button>
       <button onclick="showBibTab('videos',this)">Videos</button>
       <button class="green" onclick="showBibTab('discover',this)">✦ Discover IA</button>
+      <button class="orange" onclick="showBibTab('local',this)">📁 Local</button>
       <button onclick="showBibTab('audios',this)">Biblioteca</button>
     </div>
 
@@ -113,7 +121,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
     <div class="grid">
       <div class="tile t1" onclick="cargarAudios('amor');showBibTab('audios')"><span>❤️</span><div><b>Amor</b><br><small>Baladas & Románticas</small></div></div>
       <div class="tile t2" onclick="cargarVideos('musica cristiana');showBibTab('videos')"><span>🎬</span><div><b>Videos</b><br><small>Ver en HD</small></div></div>
-      <div class="tile t3" onclick="showBibTab('discover')"><span>✦</span><div><b>Crear con IA</b><br><small>Vanso AI</small></div></div>
+      <div class="tile t5" onclick="abrirCarpetaLocal()"><span>📁</span><div><b>Mi Música Local</b><br><small>Buscar directorios</small></div></div>
       <div class="tile t4" onclick="showBibTab('discover')"><span>🤖</span><div><b>Discover IA</b><br><small>Tus creaciones</small></div></div>
     </div>
 
@@ -128,17 +136,27 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
       <div id="listaVideos"><div class="empty">Tocá un botón para cargar videos.</div></div>
     </div>
 
-    <!-- DISCOVER MODIFICADO CON VANSO -->
-    <div id="bibDiscover" style="display:none">
-      <div class="sec"><b>【entity-Discover¦canonical_name=Discover】 IA</b><small>Vanso AI</small></div>
+    <!-- LOCAL -->
+    <div id="bibLocal" style="display:none">
+      <div class="sec"><b>📁 Música Local</b><small id="countLocal">0 archivos</small></div>
+      <div class="local-box">
+        <b>📁 Buscar directorios locales</b>
+        <p>Elegí la carpeta donde tenés tu música en la PC / celu. En PC entra también a las subcarpetas. Queda solo en esta pestaña, no se sube a ningún lado.</p>
+        <button class="btn-local" onclick="abrirCarpetaLocal()">📁 ELEGIR CARPETA / DIRECTORIO</button>
+        <button class="btn-local2" onclick="document.getElementById('inputLocalFiles').click()">🎵 Elegir archivos sueltos</button>
+      </div>
+      <div class="chips"><button onclick="filtrarLocal('')">Todo</button><button onclick="filtrarLocal('mp3')">MP3</button><button onclick="filtrarLocal('mp4')">Video</button><button onclick="filtrarLocal('wav')">WAV</button></div>
+      <div id="listaLocal"><div class="empty">Todavía no elegiste carpeta.<br>Tocá ELEGIR CARPETA arriba.</div></div>
+    </div>
 
+    <div id="bibDiscover" style="display:none">
+      <div class="sec"><b>Discover IA</b><small>Vanso AI</small></div>
       <div class="vanso-box">
         <b>✦ Crear música con IA en Vanso</b>
         <p>1. Tocá Abrir Vanso<br>2. Escribí lo que querés o copiá un ejemplo de abajo<br>3. Generá tu tema, descargalo o copiá el link del audio<br>4. Pegalo acá abajo y queda guardado en NITROX</p>
         <button class="btn-vanso" onclick="window.open('https://s.vanso.ai','_blank')">✦ ABRIR VANSO AI</button>
         <button class="btn-vanso2" onclick="copiarPrompt(document.getElementById('promptBase').value)">📋 Copiar prompt para Vanso</button>
       </div>
-
       <div style="margin-bottom:12px">
         <b style="font-size:14px">Ejemplos para pegar en Vanso:</b>
         <div style="margin-top:10px">
@@ -149,7 +167,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
         </div>
         <input id="promptBase" placeholder="Tu prompt para Vanso..." style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px;border-radius:14px;outline:none" value="Balada de amor cristiana, voz suave, piano y guitarra, en español">
       </div>
-
       <div class="vanso-box">
         <b>＋ Agregar tu creación de Vanso</b>
         <p>Pegá el nombre y el link del audio que te dio Vanso. Si descargaste el MP3, subilo a Netlify / tu nube y pegá el link acá.</p>
@@ -159,7 +176,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
         <input id="vImg" placeholder="Link de portada (opcional) - si no, usa el logo">
         <button class="btn-vanso" onclick="agregarVanso()">＋ GUARDAR EN NITROX</button>
       </div>
-
       <div class="sec"><b>Mis creaciones IA</b><small id="countVanso">0 temas</small></div>
       <div id="listaDiscover"><div class="empty">Todavía no tenés creaciones.<br>Creá una en Vanso y agregala arriba.</div></div>
     </div>
@@ -167,6 +183,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
   <div class="bottom-nav">
     <button class="active" onclick="showBibTab('audios')"><span>🏠</span>Inicio</button>
     <button onclick="showBibTab('discover')"><span>✦</span>Discover IA</button>
+    <button onclick="showBibTab('local')"><span>📁</span>Local</button>
     <button onclick="showBibTab('videos')"><span>🎬</span>Videos</button>
     <button onclick="abrirMenu()"><span>⚙️</span>Ajustes</button>
   </div>
@@ -218,16 +235,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(700px 
   </div>
 </div>
 
+<input type="file" id="inputLocal" webkitdirectory directory multiple accept="audio/*,video/*" style="display:none">
+<input type="file" id="inputLocalFiles" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.flac,.mp4,.mkv,.webm" style="display:none">
+
 <audio id="audio" preload="none"></audio>
 <script>
-let listaActual=[]; let indiceActual=0; let tipoActual='audio'; let autoGiro=false;
+let listaActual=[]; let indiceActual=0; let tipoActual='audio'; let autoGiro=false; let tabActual='audios';
+let archivosLocales=[]; let filtroLocal='';
 const audio=document.getElementById('audio'); const videoEl=document.getElementById('videoEl');
 let ctx=null,bassF=null,midF=null,trebF=null,gainN=null;
 function initEQ(){ if(ctx) return; try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); const src=ctx.createMediaElementSource(audio); bassF=ctx.createBiquadFilter(); bassF.type='lowshelf'; bassF.frequency.value=200; midF=ctx.createBiquadFilter(); midF.type='peaking'; midF.frequency.value=1000; trebF=ctx.createBiquadFilter(); trebF.type='highshelf'; trebF.frequency.value=4000; gainN=ctx.createGain(); src.connect(bassF); bassF.connect(midF); midF.connect(trebF); trebF.connect(gainN); gainN.connect(ctx.destination);}catch(e){} }
 function aplicarEQ(){ initEQ(); if(ctx&&ctx.state==='suspended') ctx.resume(); const b=+document.getElementById('eqBass').value,m=+document.getElementById('eqMid').value,t=+document.getElementById('eqTreble').value,v=+document.getElementById('eqVol').value; document.getElementById('vBass').textContent=b+' dB'; document.getElementById('vMid').textContent=m+' dB'; document.getElementById('vTreble').textContent=t+' dB'; document.getElementById('vVol').textContent=v+'%'; if(bassF){bassF.gain.value=b;midF.gain.value=m;trebF.gain.value=t;gainN.gain.value=v/100;} }
 function setPreset(p){ let b=0,m=0,t=0; if(p==='cristiana'){b=2;m=4;t=3} if(p==='amor'){b=3;m=2;t=2} if(p==='bajo'){b=10;m=0;t=2} document.getElementById('eqBass').value=b; document.getElementById('eqMid').value=m; document.getElementById('eqTreble').value=t; aplicarEQ(); }
-function showBibTab(tab,btn){ ['audios','videos','discover'].forEach(t=>{ document.getElementById('bib'+t.charAt(0).toUpperCase()+t.slice(1)).style.display=t===tab?'block':'none'; }); document.querySelectorAll('.pills button').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); if(tab==='discover') cargarVanso(); }
-function buscarGlobal(){ const v=document.getElementById('searchGlobal').value.trim(); if(v) cargarAudios(v); showBibTab('audios'); }
+function showBibTab(tab,btn){ tabActual=tab; ['audios','videos','discover','local'].forEach(t=>{ const el=document.getElementById('bib'+t.charAt(0).toUpperCase()+t.slice(1)); if(el) el.style.display=t===tab?'block':'none'; }); document.querySelectorAll('.pills button').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); if(tab==='discover') cargarVanso(); if(tab==='local') renderLocal(); }
+function buscarGlobal(){ const v=document.getElementById('searchGlobal').value.trim(); if(!v) return; if(tabActual==='local'){ filtroLocal=v.toLowerCase(); renderLocal(); return; } cargarAudios(v); showBibTab('audios'); }
 function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 async function cargarAudios(q){ if(!q) return; await cargar('listaAudios',q,'song','audio'); }
 async function cargarVideos(q){ if(!q) return; await cargar('listaVideos',q,'musicVideo','video'); }
@@ -237,10 +258,58 @@ async function cargar(listId,q,entity,tipo){
     const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&media=music&entity='+entity+'&limit=30&lang=es_es');
     const data=await res.json(); if(!data.results||!data.results.length){ box.innerHTML='<div class="empty">No se encontró nada.</div>'; return; }
     box.innerHTML='';
-    data.results.forEach((t,i)=>{ if(!t.previewUrl) return; const div=document.createElement('div'); div.className='card'; div.innerHTML=`<img src="${t.artworkUrl100||''}"><div class="info"><b>${escapeHtml(t.trackName||'')}</b><small>${escapeHtml(t.artistName||'')} • ${tipo==='video'?'Video':'Audio'}</small></div><button class="mini go" onclick="irAReproductor('${listId}',${i})">▶</button><button class="mini down" onclick="descargarDirecto('${t.previewUrl}')">⬇️</button>`; div.dataset.title=t.trackName||''; div.dataset.artist=t.artistName||''; div.dataset.img=t.artworkUrl100||''; div.dataset.url=t.previewUrl; div.dataset.tipo=tipo; box.appendChild(div); });
-  }catch(e){ box.innerHTML='<div class="empty">Error de conexión.</div>'; }
+    let idx=0;
+    data.results.forEach((t)=>{ if(!t.previewUrl) return; const div=document.createElement('div'); div.className='card'; const btnPlay=document.createElement('button'); btnPlay.className='mini go'; btnPlay.textContent='▶'; btnPlay.onclick=()=>irAReproductor(listId,idx); const btnDown=document.createElement('button'); btnDown.className='mini down'; btnDown.textContent='⬇️'; btnDown.onclick=()=>descargarDirecto(t.previewUrl); div.innerHTML=`<img src="${t.artworkUrl100||''}"><div class="info"><b>${escapeHtml(t.trackName||'')}</b><small>${escapeHtml(t.artistName||'')} • ${tipo==='video'?'Video':'Audio'}</small></div>`; div.appendChild(btnPlay); div.appendChild(btnDown); div.dataset.title=t.trackName||''; div.dataset.artist=t.artistName||''; div.dataset.img=t.artworkUrl100||''; div.dataset.url=t.previewUrl; div.dataset.tipo=tipo; box.appendChild(div); idx++; });
+    if(!idx) box.innerHTML='<div class="empty">No se encontró nada con audio.</div>';
+  }catch(e){ box.innerHTML='<div class="empty">Error de conexión. Revisá internet y volvé a tocar el botón.</div>'; }
 }
-// --- VANSO / DISCOVER IA ---
+// --- LOCAL / DIRECTORIOS ---
+function esAudioVideo(f){ const n=(f.name||'').toLowerCase(); return (f.type||'').startsWith('audio/')||(f.type||'').startsWith('video/')||/\.(mp3|wav|m4a|ogg|flac|aac|opus|mp4|mkv|webm|mov)$/.test(n); }
+function agregarArchivosLocales(files){
+  const nuevos=[...files].filter(esAudioVideo);
+  if(!nuevos.length){ alert('No encontré audios/videos en esa carpeta'); return; }
+  nuevos.forEach(f=>{
+    const url=URL.createObjectURL(f);
+    const esVideo=f.type.startsWith('video/')||/\.(mp4|mkv|webm|mov)$/.test(f.name.toLowerCase());
+    archivosLocales.push({title:f.name.replace(/\.[^.]+$/,''), file:f.name, artist:'Archivo local • '+((f.size/1024/1024).toFixed(1))+' MB'), img:'', url:url, tipo: esVideo?'video':'audio'});
+  });
+  filtroLocal=''; renderLocal(); showBibTab('local');
+}
+async function abrirCarpetaLocal(){
+  try{
+    if(window.showDirectoryPicker){
+      const dir=await window.showDirectoryPicker();
+      const files=[];
+      async function recorrer(handle, path){
+        for await (const entry of handle.values()){
+          if(entry.kind==='file'){ const f=await entry.getFile(); f._path=path+'/'+f.name; files.push(f); }
+          else if(entry.kind==='directory'){ await recorrer(entry, path+'/'+entry.name); }
+        }
+      }
+      await recorrer(dir, dir.name);
+      agregarArchivosLocales(files); return;
+    }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  document.getElementById('inputLocal').click();
+}
+document.getElementById('inputLocal').addEventListener('change',e=>{ agregarArchivosLocales(e.target.files); e.target.value=''; });
+document.getElementById('inputLocalFiles').addEventListener('change',e=>{ agregarArchivosLocales(e.target.files); e.target.value=''; });
+function renderLocal(){
+  const box=document.getElementById('listaLocal'); if(!box) return;
+  document.getElementById('countLocal').textContent=archivosLocales.length+' archivos';
+  const lista=archivosLocales.filter(t=>!filtroLocal||t.title.toLowerCase().includes(filtroLocal)||t.file.toLowerCase().includes(filtroLocal));
+  if(!lista.length){ box.innerHTML='<div class="empty">'+(archivosLocales.length?'No coincide con "'+escapeHtml(filtroLocal)+'"':'Todavía no elegiste carpeta.<br>Tocá ELEGIR CARPETA arriba.')+'</div>'; return; }
+  box.innerHTML='';
+  lista.forEach((t)=>{
+    const realIdx=archivosLocales.indexOf(t);
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`<img src="" onerror="this.style.display='none'"><div class="info"><b>${escapeHtml(t.title)}</b><small>${escapeHtml(t.artist)} • ${t.tipo==='video'?'Video':'Audio'}</small></div>`;
+    const b=document.createElement('button'); b.className='mini go'; b.textContent='▶'; b.onclick=()=>irAReproductor('listaLocal', realIdx);
+    div.appendChild(b); box.appendChild(div);
+  });
+}
+function filtrarLocal(f){ filtroLocal=f.toLowerCase(); renderLocal(); }
+// --- VANSO ---
 function getVanso(){ try{ return JSON.parse(localStorage.getItem('nitrox_vanso')||'[]'); }catch(e){ return []; } }
 function saveVanso(list){ localStorage.setItem('nitrox_vanso', JSON.stringify(list)); }
 function usarPrompt(btn){ document.getElementById('promptBase').value = btn.textContent.trim(); copiarPrompt(btn.textContent.trim()); }
@@ -262,16 +331,25 @@ function cargarVanso(){
   box.innerHTML='';
   list.forEach((t,i)=>{
     const div=document.createElement('div'); div.className='card';
-    div.innerHTML=`<img src="${t.img}"><div class="info"><b>${escapeHtml(t.title)}</b><small>${escapeHtml(t.artist)} • IA - Vanso</small></div><button class="mini go" onclick="irAReproductor('listaDiscover',${i})">▶</button><button class="mini down" onclick="borrarVanso(${i})">✕</button>`;
+    div.innerHTML=`<img src="${t.img}"><div class="info"><b>${escapeHtml(t.title)}</b><small>${escapeHtml(t.artist)} • IA - Vanso</small></div>`;
+    const b1=document.createElement('button'); b1.className='mini go'; b1.textContent='▶'; b1.onclick=()=>irAReproductor('listaDiscover',i);
+    const b2=document.createElement('button'); b2.className='mini down'; b2.textContent='✕'; b2.onclick=()=>borrarVanso(i);
+    div.appendChild(b1); div.appendChild(b2);
     div.dataset.title=t.title; div.dataset.artist=t.artist; div.dataset.img=t.img; div.dataset.url=t.url; div.dataset.tipo='audio';
     box.appendChild(div);
   });
 }
 function borrarVanso(i){ if(!confirm('¿Borrar este tema IA?')) return; const list=getVanso(); list.splice(i,1); saveVanso(list); cargarVanso(); }
-// --- FIN VANSO ---
-function descargarDirecto(url){ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.click(); }
-function irAReproductor(listId,index){ const cards=[...document.getElementById(listId).querySelectorAll('.card')]; listaActual=cards.map(c=>({title:c.dataset.title,artist:c.dataset.artist,img:c.dataset.img,url:c.dataset.url,tipo:c.dataset.tipo})); indiceActual=index; tipoActual=listaActual[index].tipo; abrirReproductor(); }
-function abrirReproductor(){ const t=listaActual[indiceActual]; document.getElementById('bibView').classList.remove('active'); document.getElementById('playerView').classList.add('show'); document.getElementById('pTitle').textContent=t.title; document.getElementById('pArtist').textContent=t.artist; document.getElementById('pCover').src=t.img; document.getElementById('pDown').href=t.url; document.getElementById('lyricsBox').textContent='Letra de "'+t.title+' - '+t.artist+'"\n\nEsta creación es de Vanso IA. Si la generaste vos, la letra la tenés en Vanso.'; document.getElementById('videoControls').style.display=t.tipo==='video'?'flex':'none'; videoEl.classList.toggle('show',t.tipo==='video'); document.getElementById('pCover').style.display=t.tipo==='video'?'none':'block'; if(t.tipo==='video'){audio.pause(); videoEl.src=t.url; videoEl.play();} else {videoEl.pause(); videoEl.removeAttribute('src'); audio.src=t.url; audio.play(); initEQ(); aplicarEQ();} document.getElementById('btnPlayPause').textContent='❚❚'; irAPortada(); }
+function descargarDirecto(url){ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.rel='noopener'; a.click(); }
+function irAReproductor(listId,index){
+  let cards=[];
+  if(listId==='listaLocal'){
+    listaActual=archivosLocales.slice(); indiceActual=index; tipoActual=listaActual[index].tipo; abrirReproductor(); return;
+  }
+  cards=[...document.getElementById(listId).querySelectorAll('.card')];
+  listaActual=cards.map(c=>({title:c.dataset.title,artist:c.dataset.artist,img:c.dataset.img,url:c.dataset.url,tipo:c.dataset.tipo})); indiceActual=index; tipoActual=listaActual[index].tipo; abrirReproductor();
+}
+function abrirReproductor(){ const t=listaActual[indiceActual]; if(!t) return; document.getElementById('bibView').classList.remove('active'); document.getElementById('playerView').classList.add('show'); document.getElementById('pTitle').textContent=t.title; document.getElementById('pArtist').textContent=t.artist; document.getElementById('pCover').src=t.img||'logoaudio.jpeg'; document.getElementById('pDown').href=t.url; document.getElementById('lyricsBox').textContent='Letra de "'+t.title+' - '+t.artist+'"\n\nEsta creación es de Vanso IA. Si la generaste vos, la letra la tenés en Vanso.'; document.getElementById('videoControls').style.display=t.tipo==='video'?'flex':'none'; videoEl.classList.toggle('show',t.tipo==='video'); document.getElementById('pCover').style.display=t.tipo==='video'?'none':'block'; if(t.tipo==='video'){audio.pause(); videoEl.src=t.url; videoEl.play();} else {videoEl.pause(); videoEl.removeAttribute('src'); audio.src=t.url; audio.play(); initEQ(); aplicarEQ();} document.getElementById('btnPlayPause').textContent='❚❚'; irAPortada(); }
 function volverABiblioteca(){ document.getElementById('playerView').classList.remove('show'); document.getElementById('bibView').classList.add('active'); cerrarMenu(); }
 function togglePlay(){ if(tipoActual==='video'){ if(videoEl.paused){videoEl.play(); document.getElementById('btnPlayPause').textContent='❚❚';} else {videoEl.pause(); document.getElementById('btnPlayPause').textContent='▶';} } else { if(audio.paused){audio.play(); document.getElementById('btnPlayPause').textContent='❚❚';} else {audio.pause(); document.getElementById('btnPlayPause').textContent='▶';} } }
 function stopAudio(){ if(tipoActual==='video'){videoEl.pause(); videoEl.currentTime=0;} else {audio.pause(); audio.currentTime=0;} document.getElementById('btnPlayPause').textContent='▶'; }
